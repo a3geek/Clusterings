@@ -43,7 +43,7 @@ namespace Clusterings.Example {
                 ));
             }
             
-            this.kmeans = new Kmeans(nodes, this.clusters, this.threshold, this.initIteration, this.box.center, this.box.size);
+            this.kmeans = new Kmeans(nodes, this.clusters, this.threshold, this.initIteration/*, this.box.center, this.box.size*/);
             this.Calculating = false;
 
             for(var i = 0; i < this.clusters; i++) {
@@ -59,6 +59,8 @@ namespace Clusterings.Example {
             yield return new WaitForSeconds(this.wait);
 
             this.Calculating = true;
+            yield return new WaitForSeconds(this.wait);
+
             while(this.kmeans.StepCalculate() == false) {
                 yield return new WaitForSeconds(this.wait);
             }

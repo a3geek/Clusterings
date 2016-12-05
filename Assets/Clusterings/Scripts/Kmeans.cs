@@ -21,18 +21,19 @@ namespace Clusterings {
             get { return this.finished <= 0; }
         }
 
-        private bool step = false;
+        private bool step = true;
         private int finished = 2;
         private List<InternalNode> nodes = new List<InternalNode>();
         private InternalCluster[] clusters = new InternalCluster[0];
 
 
-        public Kmeans(List<Vector3> nodes, int clusters, int threshold) {
+        public Kmeans(List<Vector3> nodes, int clusters, float threshold) {
             this.Init(nodes, clusters, threshold);
             this.InitCalculate(clusters);
+            this.step = false;
         }
 
-        public Kmeans(List<Vector3> nodes, int clusters, int threshold, int iteration) {
+        public Kmeans(List<Vector3> nodes, int clusters, float threshold, int iteration) {
             this.Init(nodes, clusters, threshold);
             this.InitCalculate(clusters, iteration);
         }
@@ -66,6 +67,10 @@ namespace Clusterings {
             this.Threshold = threshold;
 
             this.clusters = new InternalCluster[clusters];
+            for(var i = 0; i < clusters; i++) {
+                this.clusters[i] = new InternalCluster(i, Vector3.zero);
+            }
+
             this.nodes = nodes.ConvertAll(node => new InternalNode(node, 0));
         }
 
@@ -87,6 +92,8 @@ namespace Clusterings {
             var clustered = new List<int>();
 
             this.InitIterativeCalculate(numberOfCluster, iteration, index => {
+                clustered = new List<int>();
+
                 while(clustered.Count < numberOfCluster) {
                     var rand = Random.Range(0, nodes.Count);
 
